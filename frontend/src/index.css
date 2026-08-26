@@ -1,0 +1,44 @@
+:root {
+  --bg: #100c0a;
+  --bg-elevated: #1a1410;
+  --surface: #241c16;
+  --border: #3b2d22;
+  --text: #f6efe4;
+  --text-muted: #b7a394;
+  --gold: #e4b96a;
+  --gold-strong: #d4a017;
+  --wine: #8b2e2e;
+  --watching: #f59e0b;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  --sans: 'Segoe UI', Georgia, system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  color: var(--text);
+  background:
+    radial-gradient(circle at top, rgba(139, 46, 46, 0.28), transparent 38%),
+    linear-gradient(#160f0c, var(--bg));
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}

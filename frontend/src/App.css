@@ -1,0 +1,244 @@
+.cine-app {
+  width: min(1100px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 40px 0 72px;
+  display: grid;
+  gap: 24px;
+}
+
+.cine-header {
+  text-align: center;
+}
+
+.cine-kicker {
+  margin: 0 0 8px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: var(--gold);
+}
+
+.cine-header h1 {
+  margin: 0;
+  font-size: clamp(2.1rem, 6vw, 3.4rem);
+  letter-spacing: 0.04em;
+}
+
+.cine-subtitle {
+  max-width: 480px;
+  margin: 10px auto 0;
+  color: var(--text-muted);
+}
+
+.cine-toolbar,
+.cine-panel,
+.cine-list,
+.watched-card {
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: rgba(26, 20, 16, 0.9);
+  box-shadow: var(--shadow);
+}
+
+.cine-toolbar {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 12px;
+  padding: 16px;
+}
+
+.toolbar-group {
+  display: flex;
+  gap: 8px;
+}
+
+.toolbar-group input,
+.toolbar-group select,
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+}
+
+.toolbar-group input:focus,
+.toolbar-group select:focus,
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--gold);
+}
+
+.toolbar-group button,
+.form-actions button,
+.remove-button {
+  border: 0;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.toolbar-group button,
+.form-actions button {
+  padding: 11px 16px;
+  background: var(--gold-strong);
+  color: #1a1208;
+  white-space: nowrap;
+}
+
+.toolbar-group button:hover,
+.form-actions button:hover {
+  background: var(--gold);
+}
+
+.cine-panel,
+.cine-list {
+  padding: 22px;
+}
+
+.panel-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 18px;
+}
+
+.panel-heading h2,
+.watched-body h3 {
+  margin: 0;
+}
+
+.panel-heading p,
+.watched-meta,
+.watched-review,
+.empty-state {
+  color: var(--text-muted);
+}
+
+.movie-form {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field span {
+  font-size: 0.8rem;
+  color: var(--gold);
+}
+
+.field-wide {
+  grid-column: 1 / -1;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 14px;
+}
+
+.watched-card {
+  display: grid;
+  grid-template-rows: 140px 1fr;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+.watched-poster {
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, var(--wine), #2a1210);
+  font-size: 2.4rem;
+  font-weight: 700;
+}
+
+.watched-body {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  align-content: start;
+}
+
+.watched-meta,
+.watched-status {
+  margin: 0;
+  font-size: 0.82rem;
+}
+
+.watched-status {
+  width: fit-content;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(228, 185, 106, 0.12);
+  color: var(--gold);
+}
+
+.watched-rating {
+  margin: 0;
+  color: var(--gold);
+  letter-spacing: 0.08em;
+}
+
+.watched-review {
+  margin: 0;
+  min-height: 3.2em;
+  font-size: 0.92rem;
+}
+
+.remove-button {
+  margin-top: 6px;
+  padding: 8px 10px;
+  background: transparent;
+  color: #fb7185;
+  border: 1px solid rgba(251, 113, 133, 0.35);
+}
+
+.remove-button:hover {
+  background: rgba(251, 113, 133, 0.12);
+}
+
+.empty-state {
+  margin: 28px 0;
+  text-align: center;
+}
+
+@media (max-width: 800px) {
+  .cine-toolbar,
+  .movie-form,
+  .panel-heading {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-heading {
+    display: grid;
+  }
+
+  .toolbar-group,
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
