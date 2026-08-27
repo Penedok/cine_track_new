@@ -1,5 +1,5 @@
 # A lista em memória dos filmes. Todas as funções abaixo leem ou alteram essa lista.
-from data.movies_data import movies
+from data.movies_data import movies , sessao_cinema
 
 
 def get_movies():
@@ -49,4 +49,16 @@ def editar_filme(id, dados):
 
     # Não achou o id: devolve mensagem + código 404
     # (normalmente o 404 fica na rota, não no service)
+    return ({"mensagem": "Filme não encontrado!"}), 404
+
+
+
+def sofaflix(id):
+    for movie in movies:
+        if movie["id"] == id:
+           if movie in sessao_cinema:
+               return "O filme já foi adicionado" , 409
+           else:
+             sessao_cinema.append(movie)
+             return movie  
     return ({"mensagem": "Filme não encontrado!"}), 404

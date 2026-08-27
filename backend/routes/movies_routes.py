@@ -10,6 +10,7 @@ from services.movies_service import (
     create_movie,
     delete_movie,
     editar_filme,
+    sofaflix
 )
 
 # Cria o grupo de rotas. O nome 'movies' é só um identificador interno.
@@ -66,3 +67,15 @@ def update_by_id(id):
         return jsonify({"erro": "Filme não encontrado"}), 404
 
     return jsonify(movie)
+
+
+@movies_routes.route("/movies", methods=["POST"])
+def watch_later():
+    nova_sessao = request.get_json()
+    sessao_cinema = sofaflix(nova_sessao)
+
+    return jsonify(sessao_cinema)
+
+    
+    
+  

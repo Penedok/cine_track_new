@@ -46,3 +46,14 @@ movies =[
     },
    
 ]
+
+sessao_cinema =[{
+  "descricao": "QUALQUER COISA",
+  "id": [1, 2]
+     },
+     {
+  "descricao": "QUALQUER COISA",
+  "id": [1, 2]
+}
+]
+
