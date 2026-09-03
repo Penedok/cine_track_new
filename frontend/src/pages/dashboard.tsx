@@ -2,13 +2,11 @@ import { useEffect, useState, useMemo} from 'react'
 import getMovies from '../../service/getMovie'
 import postMovie from '../../service/postMovie'
 import deleteMovie from '../../service/deleteMovie'
-import { useSession } from '../context/SessionContext'
 
 
 
 
 export default function Dashboard() {
-  const { openSessionModal } = useSession()
   const [movies, setMovies] = useState<any[]>([])
   const [search, setSearch] = useState('')
   const [genre, setGenre] = useState('')
@@ -97,18 +95,21 @@ export default function Dashboard() {
    
     <main className="cine-app">
       <header className="cine-header">
-        <p className="cine-kicker">Biblioteca pessoal</p>
-        <h1>Cine Tracker</h1>
-        <p className="cine-subtitle">
-          Pesquise, filtre, adicione e avalie os filmes que você já assistiu.
-        </p>
-        <button
-          type="button"
-          className="session-open-button"
-          onClick={openSessionModal}
-        >
-          Sessão cinema
-        </button>
+        <div className="cine-header-top">
+          <div className="cine-header-copy">
+            <p className="cine-kicker">Biblioteca pessoal</p>
+            <h1>Cine Tracker</h1>
+            <p className="cine-subtitle">
+              Pesquise, filtre, adicione e avalie os filmes que você já assistiu.
+            </p>
+          </div>
+          <img
+            className="cine-logo"
+            src="/cine_tracker_logo.png"
+            alt="Cine Tracker"
+          />
+        </div>
+       
       </header>
 
       <section className="cine-toolbar" aria-label="Busca e filtros">

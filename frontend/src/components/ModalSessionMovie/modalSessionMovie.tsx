@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Movie } from "../../types/movie";
 import getMovies from "../../../service/getMovie";
 import { useSession } from "../../context/SessionContext";
+import {postSession} from "../../../service/postSession";
 
 type CatalogMovie = Movie & {
   ano?: number;
@@ -13,6 +14,9 @@ export default function ModalSessionMovie() {
   const [movies, setMovies] = useState<CatalogMovie[]>([]);
   const [search, setSearch] = useState("");
   const [selectedMovies, setSelectedMovies] = useState<CatalogMovie[]>([]);
+  const [description,setDescription] = useState("");
+
+
 
   const handleGetMovies = async () => {
     const response = await getMovies();
@@ -26,6 +30,19 @@ export default function ModalSessionMovie() {
   useEffect(() => {
     handleGetMovies();
   }, []);
+
+  const handlePostSession = async(description:string,ids:number[])=>{
+    const response = await postSession(description,ids)
+   
+    if(response){
+      closeSessionModal();
+      setDescription("");
+      setSelectedMovies([]);
+     
+    } else {
+      console.log("Não foi possível criar a sessão");
+    }
+  }
 
   const filteredMovies = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -72,18 +89,23 @@ export default function ModalSessionMovie() {
           </button>
         </header>
 
-        <input
-          className="session-modal-search"
-          type="text"
-          placeholder="Pesquise por um filme"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-          aria-label="Pesquise por um filme"
-        />
+        <div>
+          <input value={description} onChange={(e) => setDescription(e.target.value)} className="session-modal-search" type="text" id="all" placeholder="Digite a descrição da sessão" />
+        </div>
+
 
         <div className="session-modal-body">
           <section className="session-modal-column">
             <h3>Filmes disponíveis</h3>
+            <input
+              className="session-modal-search"
+              type="text"
+              placeholder="Pesquise por um filme"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              aria-label="Pesquise por um filme"
+            />
+
             <div className="session-modal-list">
               {filteredMovies.length === 0 ? (
                 <p className="session-modal-empty">
@@ -123,6 +145,7 @@ export default function ModalSessionMovie() {
             <h3>Filmes selecionados</h3>
             <div className="session-modal-list">
               {selectedMovies.length === 0 ? (
+               
                 <p className="session-modal-empty">
                   Os filmes escolhidos para a sessão aparecem aqui.
                 </p>
@@ -150,7 +173,12 @@ export default function ModalSessionMovie() {
           </section>
         </div>
 
-        <button className="session-modal-submit" type="button">
+        <button
+          className="session-modal-submit"
+          type="button"
+         
+          onClick={()=>handlePostSession(description,selectedMovies.map((movie) => movie.id))}
+        >
           Criar sessão cinema
         </button>
       </div>
