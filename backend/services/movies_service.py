@@ -52,13 +52,41 @@ def editar_filme(id, dados):
     return ({"mensagem": "Filme não encontrado!"}), 404
 
 
+def criar_sessao_service(dados):
+    novo_id = len(sessao_cinema) + 1
+    nova_sessao = {
+                    "id": novo_id,
+                    "descricao": dados["descricao"],
+                    "filmes_id": dados["filmes_id"]
+    }
+    
+    sessao_cinema.append(nova_sessao)
+    return nova_sessao
 
-def sofaflix(id):
-    for movie in movies:
-        if movie["id"] == id:
-           if movie in sessao_cinema:
-               return "O filme já foi adicionado" , 409
-           else:
-             sessao_cinema.append(movie)
-             return movie  
-    return ({"mensagem": "Filme não encontrado!"}), 404
+def comparar_movies():
+    sessoes_com_filmes = []
+    for sessao in sessao_cinema:
+      
+          filmes_encontrados = []
+
+          for movie in movies:
+            if movie["id"] in sessao["filmes_id"]:
+                  filmes_encontrados.append(movie)
+                  
+          sessoes_com_filmes.append({
+              "id": sessao["id"],
+              "descricao": sessao["descricao"],
+              "filmes": filmes_encontrados
+            })
+    return sessoes_com_filmes
+  
+
+
+
+
+
+    
+           
+
+
+   

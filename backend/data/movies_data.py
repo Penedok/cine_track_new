@@ -47,13 +47,15 @@ movies =[
    
 ]
 
-sessao_cinema =[{
-  "descricao": "QUALQUER COISA",
-  "id": [1, 2]
-     },
+sessao_cinema = [
+    {
+        "id":1,
+        "descricao":"sabádo a tarde",
+        "filmes_id":[4,5]
+    },
      {
-  "descricao": "QUALQUER COISA",
-  "id": [1, 2]
-}
+        "id":2,
+        "descricao":"domingo a tarde",
+        "filmes_id":[2,5]
+    }
 ]
-
