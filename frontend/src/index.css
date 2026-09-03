@@ -1,16 +1,19 @@
 :root {
-  --bg: #100c0a;
-  --bg-elevated: #1a1410;
-  --surface: #241c16;
-  --border: #3b2d22;
-  --text: #f6efe4;
-  --text-muted: #b7a394;
-  --gold: #e4b96a;
-  --gold-strong: #d4a017;
-  --wine: #8b2e2e;
-  --watching: #f59e0b;
-  --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
-  --sans: 'Segoe UI', Georgia, system-ui, sans-serif;
+  --bg: #0b0c0e;
+  --bg-elevated: #12141a;
+  --surface: #1a1d24;
+  --surface-soft: #22262f;
+  --border: rgba(232, 224, 210, 0.1);
+  --text: #f3eee6;
+  --text-muted: #9b958c;
+  --gold: #d8c7a1;
+  --gold-strong: #c4b089;
+  --sage: #7d9a78;
+  --sage-deep: #4e664b;
+  --wine: #7a3340;
+  --danger: #e08a96;
+  --shadow: 0 20px 50px rgba(0, 0, 0, 0.42);
+  --sans: "Segoe UI", Georgia, system-ui, sans-serif;
 }
 
 * {
@@ -28,8 +31,9 @@ body {
   font-family: var(--sans);
   color: var(--text);
   background:
-    radial-gradient(circle at top, rgba(139, 46, 46, 0.28), transparent 38%),
-    linear-gradient(#160f0c, var(--bg));
+    radial-gradient(ellipse at 18% -8%, rgba(125, 154, 120, 0.18), transparent 42%),
+    radial-gradient(ellipse at 92% 0%, rgba(216, 199, 161, 0.08), transparent 34%),
+    linear-gradient(#101218, var(--bg));
 }
 
 button,

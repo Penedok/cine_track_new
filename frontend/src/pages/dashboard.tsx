@@ -2,15 +2,18 @@ import { useEffect, useState, useMemo} from 'react'
 import getMovies from '../../service/getMovie'
 import postMovie from '../../service/postMovie'
 import deleteMovie from '../../service/deleteMovie'
+import { useSession } from '../context/SessionContext'
+
 
 
 
 export default function Dashboard() {
+  const { openSessionModal } = useSession()
   const [movies, setMovies] = useState<any[]>([])
   const [search, setSearch] = useState('')
   const [genre, setGenre] = useState('')
   const [form, setForm] = useState({ano:'', genero:'',id:'',avaliacao:'',review:'',status:'', title:''})
-  
+
 
 
    const genres = useMemo(
@@ -99,6 +102,13 @@ export default function Dashboard() {
         <p className="cine-subtitle">
           Pesquise, filtre, adicione e avalie os filmes que você já assistiu.
         </p>
+        <button
+          type="button"
+          className="session-open-button"
+          onClick={openSessionModal}
+        >
+          Sessão cinema
+        </button>
       </header>
 
       <section className="cine-toolbar" aria-label="Busca e filtros">
@@ -106,6 +116,7 @@ export default function Dashboard() {
           className="toolbar-group"
           onSubmit={(event) => event.preventDefault()}
         >
+
           <input
             type="text"
             placeholder="Pesquisar filme"
