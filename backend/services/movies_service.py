@@ -79,6 +79,22 @@ def comparar_movies():
               "filmes": filmes_encontrados
             })
     return sessoes_com_filmes
+
+
+def edit_session(id,dados):
+    for sessao in sessao_cinema:
+        if sessao["id"] == id:
+              
+              if "filmes_id" in dados:
+                  sessao["filmes_id"] = dados["filmes_id"]
+                  
+              if "descricao" in dados:
+                  sessao["descricao"] = dados["descricao"]
+              
+              return sessao
+
+    return({"mensagem": "sessao não encontrado!"}), 404
+
   
 
 

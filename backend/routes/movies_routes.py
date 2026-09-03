@@ -11,7 +11,8 @@ from services.movies_service import (
     delete_movie,
     editar_filme,
     criar_sessao_service,
-    comparar_movies
+    comparar_movies,
+    edit_session
     
 )
 
@@ -83,6 +84,13 @@ def get_sessions_movies():
     pegar_filmes = comparar_movies()
     return jsonify(pegar_filmes)
 
+
+@movies_routes.route("/sessoes/<int:id>", methods=["PUT"])
+def update_sessios_by_id(id):
+    dados = request.get_json()
+    sessao = edit_session(id,dados)
+
+    return jsonify(sessao)
 
 
 
