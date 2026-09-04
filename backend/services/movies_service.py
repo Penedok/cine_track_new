@@ -1,5 +1,5 @@
 # A lista em memória dos filmes. Todas as funções abaixo leem ou alteram essa lista.
-from data.movies_data import movies , sessao_cinema
+from data.movies_data import movies , sessao_cinema , classificando_categoria
 
 
 def get_movies():
@@ -40,7 +40,7 @@ def editar_filme(id, dados):
             # Atualiza cada campo do filme encontrado com o que veio no body
             movie["title"] = dados["title"]
             movie["ano"] = dados["ano"]
-            movie["genero"] = dados["genero"]
+            movie["categoria"] = dados["categoria"]
             movie["status"] = dados["status"]
             movie["avaliacao"] = dados["avaliacao"]
             movie["review"] = dados["review"]
@@ -95,6 +95,41 @@ def edit_session(id,dados):
 
     return({"mensagem": "sessao não encontrado!"}), 404
 
+
+def delete_session(id):
+    for sessao in sessao_cinema:
+        if sessao["id"] == id:
+            sessao_cinema.remove(sessao)
+            return sessao
+
+
+def criar_categoria(dados):
+    add_id = len(classificando_categoria) + 1
+    nova_categoria = {"id": add_id,
+                      "categoria": dados["categoria"]
+                   }
+    classificando_categoria.append(nova_categoria)
+    return nova_categoria
+
+
+def retornar_categoria():
+    return classificando_categoria
+
+
+def pegando_categoria():
+    categoria_com_filmes = []
+    for categoria in classificando_categoria:
+        add_filmes = []
+
+        for movie in movies:
+           if movie["categoria"] == categoria["id"]:
+                add_filmes.append(movie)
+        categoria_com_filmes.append({"id":categoria["id"],
+                                     "categoria":categoria["categoria"],
+                                     "filmes":add_filmes
+                                           })
+   
+    return categoria_com_filmes      
   
 
 

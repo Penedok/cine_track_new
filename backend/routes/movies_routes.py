@@ -12,7 +12,12 @@ from services.movies_service import (
     editar_filme,
     criar_sessao_service,
     comparar_movies,
-    edit_session
+    edit_session,
+    delete_session,
+    criar_categoria,
+    retornar_categoria,
+    pegando_categoria
+    
     
 )
 
@@ -92,9 +97,35 @@ def update_sessios_by_id(id):
 
     return jsonify(sessao)
 
+@movies_routes.route("/sessoes/<int:id>", methods=["DELETE"])
+def delete_session_by_id(id):
+    sessao = delete_session(id)
+
+    if sessao is None:
+        return jsonify({"erro": "Sessão não encontrada"}),404
+
+    return jsonify({"mensagem": "Sessão removida com sucesso"}) 
 
 
+@movies_routes.route("/categoria", methods=["POST"])
+def add_categoria():
+    dados_categoria = request.get_json()
+    categoria_criada = criar_categoria(dados_categoria)
 
+    return jsonify(categoria_criada)
+
+@movies_routes.route("/categoria", methods=["GET"])
+def get_all_categoria():
+    categorias = retornar_categoria()
+
+    return jsonify(categorias)
+
+
+@movies_routes.route("/categoria/filmes", methods=["GET"])
+def get_movie_by_categoria():
+    categorias = pegando_categoria()
+
+    return jsonify (categorias)
 
 
     
