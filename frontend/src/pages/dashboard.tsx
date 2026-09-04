@@ -5,12 +5,13 @@ import deleteMovie from '../../service/deleteMovie'
 
 
 
+
 export default function Dashboard() {
   const [movies, setMovies] = useState<any[]>([])
   const [search, setSearch] = useState('')
   const [genre, setGenre] = useState('')
   const [form, setForm] = useState({ano:'', genero:'',id:'',avaliacao:'',review:'',status:'', title:''})
-  
+
 
 
    const genres = useMemo(
@@ -94,11 +95,21 @@ export default function Dashboard() {
    
     <main className="cine-app">
       <header className="cine-header">
-        <p className="cine-kicker">Biblioteca pessoal</p>
-        <h1>Cine Tracker</h1>
-        <p className="cine-subtitle">
-          Pesquise, filtre, adicione e avalie os filmes que você já assistiu.
-        </p>
+        <div className="cine-header-top">
+          <div className="cine-header-copy">
+            <p className="cine-kicker">Biblioteca pessoal</p>
+            <h1>Cine Tracker</h1>
+            <p className="cine-subtitle">
+              Pesquise, filtre, adicione e avalie os filmes que você já assistiu.
+            </p>
+          </div>
+          <img
+            className="cine-logo"
+            src="/cine_tracker_logo.png"
+            alt="Cine Tracker"
+          />
+        </div>
+       
       </header>
 
       <section className="cine-toolbar" aria-label="Busca e filtros">
@@ -106,6 +117,7 @@ export default function Dashboard() {
           className="toolbar-group"
           onSubmit={(event) => event.preventDefault()}
         >
+
           <input
             type="text"
             placeholder="Pesquisar filme"
