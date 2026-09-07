@@ -50,6 +50,8 @@ def get_by_id(id):
 def create_new_movie():
     novo_filme = request.get_json()
     movie = create_movie(novo_filme)
+    # if isinstance(movie,str):
+    #      return {"mensagem": movie}, 400
     # 201 = Created (recurso novo)
     return jsonify(movie), 201
 
@@ -82,6 +84,9 @@ def sessao_by_id():
     nova_sessao = request.get_json()
     sessao_cinema = criar_sessao_service(nova_sessao)
 
+    if isinstance(sessao_cinema,str):
+         return {"mensagem": sessao_cinema}, 400
+
     return jsonify(sessao_cinema)
 
 @movies_routes.route("/sessoes", methods=["GET"])
@@ -111,6 +116,9 @@ def delete_session_by_id(id):
 def add_categoria():
     dados_categoria = request.get_json()
     categoria_criada = criar_categoria(dados_categoria)
+
+    if isinstance(categoria_criada,str):
+        return jsonify({"mensagem":categoria_criada})
 
     return jsonify(categoria_criada)
 

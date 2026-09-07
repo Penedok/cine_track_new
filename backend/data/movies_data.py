@@ -61,7 +61,7 @@ sessao_cinema = [
 ]
 
 
-classificando_categoria = [
+criando_categoria = [
     {   "id":1,
         "categoria": "Drama"
     },
@@ -72,3 +72,4 @@ classificando_categoria = [
         "categoria": "Fantasia"
     },
 ]
+

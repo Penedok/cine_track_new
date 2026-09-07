@@ -1,5 +1,5 @@
 # A lista em memória dos filmes. Todas as funções abaixo leem ou alteram essa lista.
-from data.movies_data import movies , sessao_cinema , classificando_categoria
+from data.movies_data import movies , sessao_cinema , criando_categoria
 
 
 def get_movies():
@@ -18,9 +18,21 @@ def get_movie_by_id(id):
 
 
 def create_movie(movie):
-    # Recebe o dicionário que veio no JSON do POST e coloca no final da lista
+    chaves_permitidas = {"id":int,
+                        "title":str,
+                        "ano":int,
+                        "categoria":int,
+                        "status":str,
+                        "avaliacao":int,
+                        "review":str}
+     
+    for key,valor in movie.items():
+        if key not in chaves_permitidas:
+             return "Solicitação negada! O campo solicitado é inexistente"
+        
+     # Recebe o dicionário que veio no JSON do POST e coloca no final da lista 
     movies.append(movie)
-    # Devolve o mesmo filme para a rota responder 201 com o JSON criado
+     # Devolve o mesmo filme para a rota responder 201 com o JSON criado
     return movie
 
 
@@ -54,14 +66,22 @@ def editar_filme(id, dados):
 
 def criar_sessao_service(dados):
     novo_id = len(sessao_cinema) + 1
+
+    chaves_permitidos ={"descricao","filmes_id"}
+
+    for key in dados:
+        if key not in chaves_permitidos:
+            return "Solicitação negada! O campo solicitado é inesistente"
+        
     nova_sessao = {
                     "id": novo_id,
                     "descricao": dados["descricao"],
                     "filmes_id": dados["filmes_id"]
     }
-    
+
     sessao_cinema.append(nova_sessao)
     return nova_sessao
+
 
 def comparar_movies():
     sessoes_com_filmes = []
@@ -104,21 +124,26 @@ def delete_session(id):
 
 
 def criar_categoria(dados):
-    add_id = len(classificando_categoria) + 1
+    add_id = len(criando_categoria) + 1
+    chaves_permitidas = {"categoria"}
+    for key in dados:
+        if key not in chaves_permitidas:
+            return "Solicitação negada! O campo é mexistente"
+            
     nova_categoria = {"id": add_id,
                       "categoria": dados["categoria"]
                    }
-    classificando_categoria.append(nova_categoria)
+    criando_categoria.append(nova_categoria)
     return nova_categoria
 
 
 def retornar_categoria():
-    return classificando_categoria
+    return criando_categoria
 
 
 def pegando_categoria():
     categoria_com_filmes = []
-    for categoria in classificando_categoria:
+    for categoria in criando_categoria:
         add_filmes = []
 
         for movie in movies:
@@ -129,7 +154,7 @@ def pegando_categoria():
                                      "filmes":add_filmes
                                            })
    
-    return categoria_com_filmes      
+    return categoria_com_filmes 
   
 
 
