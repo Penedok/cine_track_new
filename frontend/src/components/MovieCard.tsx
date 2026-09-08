@@ -12,6 +12,7 @@ const NEXT_LABEL: Partial<Record<MovieStatus, string>> = {
 
 type MovieCardProps = {
   movie: Movie
+  categoriaNome?: string
   onMove: (id: number, status: MovieStatus) => void
   onRate: (id: number, rating: number) => void
   onReview: (id: number, review: string) => void
@@ -19,6 +20,7 @@ type MovieCardProps = {
 
 export default function MovieCard({
   movie,
+  categoriaNome,
   onMove,
   onRate,
   onReview,
@@ -34,7 +36,7 @@ export default function MovieCard({
 
       <div className="movie-body">
         <p className="movie-meta">
-          {movie.year} · {movie.genre}
+          {movie.year} · {categoriaNome ?? 'Sem categoria'}
         </p>
         <h3>{movie.title}</h3>
 

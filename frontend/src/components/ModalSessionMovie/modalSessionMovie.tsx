@@ -1,22 +1,32 @@
 import { useEffect, useMemo, useState } from "react";
-import { Movie } from "../../types/movie";
+import { Movie, Category } from "../../types/movie";
 import getMovies from "../../../service/getMovie";
+import getCategorias from "../../../service/getCategoria";
 import { useSession } from "../../context/SessionContext";
 import {postSession} from "../../../service/postSession";
 
 type CatalogMovie = Movie & {
   ano?: number;
-  genero?: string;
 };
 
 export default function ModalSessionMovie() {
   const { isSessionModalOpen, closeSessionModal } = useSession();
   const [movies, setMovies] = useState<CatalogMovie[]>([]);
+  const [categorias, setCategorias] = useState<Category[]>([]);
   const [search, setSearch] = useState("");
   const [selectedMovies, setSelectedMovies] = useState<CatalogMovie[]>([]);
   const [description,setDescription] = useState("");
+  const [erro, setErro] = useState("");
 
+  const categoriaNomePorId = useMemo(
+    () => new Map(categorias.map((item) => [item.id, item.categoria])),
+    [categorias],
+  );
 
+  const nomeDaCategoria = (categoriaId?: number) =>
+    categoriaId === undefined
+      ? "Sem categoria"
+      : categoriaNomePorId.get(categoriaId) ?? "Sem categoria";
 
   const handleGetMovies = async () => {
     const response = await getMovies();
@@ -27,20 +37,35 @@ export default function ModalSessionMovie() {
     }
   };
 
+  const handleGetCategorias = async () => {
+    const response = await getCategorias();
+    if (response) {
+      setCategorias(response);
+    }
+  };
+
   useEffect(() => {
     handleGetMovies();
+    handleGetCategorias();
   }, []);
 
   const handlePostSession = async(description:string,ids:number[])=>{
-    const response = await postSession(description,ids)
-   
-    if(response){
-      closeSessionModal();
-      setDescription("");
-      setSelectedMovies([]);
-     
-    } else {
-      console.log("Não foi possível criar a sessão");
+    setErro("");
+    try {
+      const response = await postSession(description,ids)
+
+      if(response){
+        closeSessionModal();
+        setDescription("");
+        setSelectedMovies([]);
+      } else {
+        console.log("Não foi possível criar a sessão");
+      }
+    } catch (error: any) {
+      const mensagem =
+        error?.response?.data?.mensagem ?? "Não foi possível criar a sessão";
+      console.error("Erro ao criar sessão:", error);
+      setErro(mensagem);
     }
   }
 
@@ -91,6 +116,7 @@ export default function ModalSessionMovie() {
 
         <div>
           <input value={description} onChange={(e) => setDescription(e.target.value)} className="session-modal-search" type="text" id="all" placeholder="Digite a descrição da sessão" />
+          {erro && <p className="session-modal-error">{erro}</p>}
         </div>
 
 
@@ -114,7 +140,6 @@ export default function ModalSessionMovie() {
               ) : (
                 filteredMovies.map((movie) => {
                   const year = movie.ano ?? movie.year;
-                  const genre = movie.genero ?? movie.genre;
                   const alreadySelected = selectedIds.has(movie.id);
 
                   return (
@@ -131,7 +156,7 @@ export default function ModalSessionMovie() {
                       <div>
                         <strong>{movie.title}</strong>
                         <span>
-                          {year} · {genre}
+                          {year} · {nomeDaCategoria(movie.categoria)}
                         </span>
                       </div>
                     </button>

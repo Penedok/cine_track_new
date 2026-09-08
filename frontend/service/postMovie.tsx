@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export const postMovie = async(title:string,
     ano:string,
-    genero:string,
+    categoria:string,
     status:string,
     avaliacao:string,
     review:string,
@@ -11,7 +11,7 @@ export const postMovie = async(title:string,
         const response = await axios.post('http://localhost:5000/movies',{
             title,
             ano,
-            genero,
+            categoria,
             status,
             avaliacao,
             review,

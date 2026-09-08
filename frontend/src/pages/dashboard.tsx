@@ -2,22 +2,31 @@ import { useEffect, useState, useMemo} from 'react'
 import getMovies from '../../service/getMovie'
 import postMovie from '../../service/postMovie'
 import deleteMovie from '../../service/deleteMovie'
+import getCategorias from '../../service/getCategoria'
+import type { Category } from '../types/movie'
+import { useCategory } from '../context/CategoryContext'
 
 
 
 
 export default function Dashboard() {
+  const { openCategoryModal, lastCreatedCategory, clearLastCreatedCategory } = useCategory()
   const [movies, setMovies] = useState<any[]>([])
+  const [categorias, setCategorias] = useState<Category[]>([])
   const [search, setSearch] = useState('')
-  const [genre, setGenre] = useState('')
-  const [form, setForm] = useState({ano:'', genero:'',id:'',avaliacao:'',review:'',status:'', title:''})
+  const [categoriaFiltro, setCategoriaFiltro] = useState('')
+  const [form, setForm] = useState({ano:'', categoria:'',id:'',avaliacao:'',review:'',status:'', title:''})
 
 
 
-   const genres = useMemo(
-    () => [...new Set(movies.map((movie) => movie.genero))].sort(),
-    [movies],
-  ) 
+  // Mapa id -> nome da categoria, pra não precisar percorrer o array toda hora
+  const categoriaNomePorId = useMemo(
+    () => new Map(categorias.map((item) => [item.id, item.categoria])),
+    [categorias],
+  )
+
+  const nomeDaCategoria = (categoriaId: unknown) =>
+    categoriaNomePorId.get(Number(categoriaId)) ?? 'Sem categoria'
 
 
   const getAllMovies = async ()=>{
@@ -29,13 +38,22 @@ export default function Dashboard() {
     }
   }
 
+  const getAllCategorias = async () => {
+    const response = await getCategorias();
+    if (response) {
+      setCategorias(response);
+    } else {
+      console.log('Não foi possível carregar as categorias');
+    }
+  }
+
   const addMovie = async (event?: React.FormEvent) => {
     if (event) event.preventDefault();
 
     const novoFilme = {
       title: form.title,
       ano: form.ano,
-      genero: form.genero,
+      categoria: form.categoria,
       status: form.status,
       avaliacao: form.avaliacao,
       review: form.review,
@@ -45,14 +63,23 @@ export default function Dashboard() {
       const response = await postMovie(
         novoFilme.title,
         novoFilme.ano,
-        novoFilme.genero,
+        novoFilme.categoria,
         novoFilme.status,
         novoFilme.avaliacao,
         novoFilme.review
       );
-      if (response) {
+
+      // O backend às vezes devolve uma string de erro (ex.: campo inválido) em vez
+      // do filme criado. Só aceita a resposta se ela realmente parecer um filme.
+      const filmeValido =
+        response && typeof response === 'object' && typeof response.title === 'string';
+
+      if (filmeValido) {
         setMovies(prev => [...prev, response]);
-        setForm({ ano: '', genero: '', id: '', avaliacao: '', review: '', status: '', title: '' });
+        setForm({ ano: '', categoria: '', id: '', avaliacao: '', review: '', status: '', title: '' });
+      } else if (response) {
+        console.error('Erro ao adicionar filme:', response);
+        alert(typeof response === 'string' ? response : 'Não foi possível adicionar o filme.');
       }
     } catch (error) {
       console.error("Erro ao adicionar filme:", error);
@@ -75,7 +102,18 @@ export default function Dashboard() {
 
   useEffect(()=>{
     getAllMovies()
+    getAllCategorias()
   },[]);
+
+  // Quando o modal de nova categoria cria uma, já adiciona na lista local
+  // e deixa pré-selecionada no formulário de filme, sem precisar recarregar tudo.
+  useEffect(() => {
+    if (lastCreatedCategory) {
+      setCategorias(prev => [...prev, lastCreatedCategory])
+      setForm(prev => ({ ...prev, categoria: String(lastCreatedCategory.id) }))
+      clearLastCreatedCategory()
+    }
+  }, [lastCreatedCategory, clearLastCreatedCategory]);
 
 
   const watchedMovies = useMemo(() => {
@@ -84,15 +122,16 @@ export default function Dashboard() {
     return movies.filter((movie) => {
       const matchesStatus = movie.status === 'assistido'
       const matchesTitle = movie?.title?.toLowerCase().includes(query)
-      const matchesGenre = genre === '' || movie?.genero === genre
-      return matchesStatus && matchesTitle && matchesGenre
+      const matchesCategoria =
+        categoriaFiltro === '' || String(movie?.categoria) === categoriaFiltro
+      return matchesStatus && matchesTitle && matchesCategoria
     })
-  }, [movies, search, genre])
+  }, [movies, search, categoriaFiltro])
 
 
 
   return (
-   
+
     <main className="cine-app">
       <header className="cine-header">
         <div className="cine-header-top">
@@ -109,7 +148,7 @@ export default function Dashboard() {
             alt="Cine Tracker"
           />
         </div>
-       
+
       </header>
 
       <section className="cine-toolbar" aria-label="Busca e filtros">
@@ -133,18 +172,18 @@ export default function Dashboard() {
           onSubmit={(event) => event.preventDefault()}
         >
           <select
-            value={genre}
-            onChange={(event) => setGenre(event.target.value)}
-            aria-label="Filtrar por gênero"
+            value={categoriaFiltro}
+            onChange={(event) => setCategoriaFiltro(event.target.value)}
+            aria-label="Filtrar por categoria"
           >
-            <option value="">Todos os gêneros</option>
-            {genres.map((item) => (
-              <option key={item} value={item}>
-                {item}
+            <option value="">Todas as categorias</option>
+            {categorias.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.categoria}
               </option>
             ))}
           </select>
-          <button type="submit">Filtrar por gênero</button>
+          <button type="submit">Filtrar por categoria</button>
         </form>
       </section>
 
@@ -183,15 +222,34 @@ export default function Dashboard() {
           </label>
 
           <label className="field">
-            <span>Gênero</span>
-            <input
-              type="text"
-              placeholder="Drama, terror..."
-              value={form.genero}
-              onChange={(event) =>
-                setForm({ ...form, genero: event.target.value })
-              }
-            />
+            <span>Categoria</span>
+            <div className="field-with-action">
+              <select
+                value={form.categoria}
+                onChange={(event) =>
+                  setForm({ ...form, categoria: event.target.value })
+                }
+                required
+              >
+                <option value="" disabled>
+                  Selecione
+                </option>
+                {categorias.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.categoria}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="button"
+                className="field-action-button"
+                onClick={openCategoryModal}
+                aria-label="Adicionar nova categoria"
+                title="Adicionar nova categoria"
+              >
+                +
+              </button>
+            </div>
           </label>
 
           <label className="field">
@@ -257,7 +315,7 @@ export default function Dashboard() {
 
                 <div className="watched-body">
                   <p className="watched-meta">
-                    {movie.ano} · {movie.genero}
+                    {movie.ano} · {nomeDaCategoria(movie.categoria)}
                   </p>
                   <h3>{movie.title}</h3>
                   <p className="watched-status">
@@ -273,7 +331,7 @@ export default function Dashboard() {
                   <button
                     type="button"
                     className="remove-button"
-                    onClick={() => removeMovie(movie.id) }  
+                    onClick={() => removeMovie(movie.id) }
                   >
                     Remover filme
                   </button>
@@ -283,6 +341,6 @@ export default function Dashboard() {
           </div>
         )}
       </section>
-    </main> 
+    </main>
   )
 }

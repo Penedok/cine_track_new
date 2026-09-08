@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import getSessions from "../../service/getSessions";
+import deleteSession from "../../service/deleteSession";
+import getCategorias from "../../service/getCategoria";
 import { useSession } from "../context/SessionContext";
+import type { Category } from "../types/movie";
 
 type SessionMovie = {
   id: number;
   title: string;
   ano?: number;
-  genero?: string;
+  categoria?: number;
 };
 
 type CinemaSession = {
@@ -18,6 +21,17 @@ type CinemaSession = {
 export default function Sessoes() {
   const { openSessionModal } = useSession();
   const [sessions, setSessions] = useState<CinemaSession[]>([]);
+  const [categorias, setCategorias] = useState<Category[]>([]);
+
+  const categoriaNomePorId = useMemo(
+    () => new Map(categorias.map((item) => [item.id, item.categoria])),
+    [categorias],
+  );
+
+  const nomeDaCategoria = (categoriaId?: number) =>
+    categoriaId === undefined
+      ? "Sem categoria"
+      : categoriaNomePorId.get(categoriaId) ?? "Sem categoria";
 
   const loadSessions = async () => {
     const response = await getSessions();
@@ -26,8 +40,25 @@ export default function Sessoes() {
     }
   };
 
+  const loadCategorias = async () => {
+    const response = await getCategorias();
+    if (response) {
+      setCategorias(response);
+    }
+  };
+
+  const removeSession = async (id: number) => {
+    const response = await deleteSession(id);
+    if (response) {
+      setSessions((prev) => prev.filter((session) => session.id !== id));
+    } else {
+      console.error("Erro ao remover sessão: não foi possível remover a sessão");
+    }
+  };
+
   useEffect(() => {
     loadSessions();
+    loadCategorias();
   }, []);
 
   return (
@@ -82,13 +113,21 @@ export default function Sessoes() {
                         <div>
                           <strong>{movie.title}</strong>
                           <span>
-                            {movie.ano} · {movie.genero}
+                            {movie.ano} · {nomeDaCategoria(movie.categoria)}
                           </span>
                         </div>
                       </li>
                     ))}
                   </ul>
                 )}
+
+                <button
+                  type="button"
+                  className="remove-button"
+                  onClick={() => removeSession(session.id)}
+                >
+                  Remover sessão
+                </button>
               </article>
             ))}
           </div>

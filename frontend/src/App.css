@@ -225,6 +225,37 @@
   resize: vertical;
 }
 
+.field-with-action {
+  display: flex;
+  gap: 6px;
+}
+
+.field-with-action select {
+  flex: 1;
+  min-width: 0;
+}
+
+.field-action-button {
+  flex-shrink: 0;
+  width: 40px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--gold);
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.field-action-button:hover {
+  border-color: var(--gold);
+}
+
+.category-modal {
+  max-width: 420px;
+}
+
 .form-actions {
   grid-column: 1 / -1;
   display: flex;
@@ -296,6 +327,12 @@
 
 .remove-button:hover {
   background: rgba(224, 138, 150, 0.1);
+}
+
+.session-modal-error {
+  margin: 6px 0 0;
+  color: var(--danger);
+  font-size: 0.85rem;
 }
 
 .empty-state {
