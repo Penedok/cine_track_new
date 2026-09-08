@@ -50,8 +50,8 @@ def get_by_id(id):
 def create_new_movie():
     novo_filme = request.get_json()
     movie = create_movie(novo_filme)
-    # if isinstance(movie,str):
-    #      return {"mensagem": movie}, 400
+    if isinstance(movie,str):
+          return {"mensagem": movie}, 400
     # 201 = Created (recurso novo)
     return jsonify(movie), 201
 
