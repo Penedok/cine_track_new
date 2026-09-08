@@ -1,5 +1,7 @@
 # A lista em memória dos filmes. Todas as funções abaixo leem ou alteram essa lista.
 from data.movies_data import movies , sessao_cinema , criando_categoria
+from models import Movie
+from extensions import db
 
 
 def get_movies():
@@ -31,7 +33,9 @@ def create_movie(movie):
              return "Solicitação negada! O campo solicitado é inexistente"
         
      # Recebe o dicionário que veio no JSON do POST e coloca no final da lista 
-    movies.append(movie)
+   
+    db.session.add(movie)
+    db.session.commit()
      # Devolve o mesmo filme para a rota responder 201 com o JSON criado
     return movie
 

@@ -3,14 +3,43 @@
 # Esta classe serve de molde: um filme TEM id, title, ano, etc.
 
 
-class Movie:
-    # __init__ roda quando você faz Movie(...).
-    # self = a instância que está sendo criada (este filme).
-    def __init__(self, id, title, ano, categoria, status, avaliacao, review):
-        self.id = id  # identificador único (1, 2, 3...)
-        self.title = title  # nome do filme
-        self.ano = ano  # ano de lançamento
-        self.categoria = categoria  # ex.: Drama, Fantasia
-        self.status = status  # ex.: "assistido", "quero ver"
-        self.avaliacao = avaliacao  # nota (ex.: 4.5)
-        self.review = review  # texto da opinião
+from extensions import db
+
+
+class Movie(db.Model):
+    __tablename__ = "movies"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    title = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+    ano = db.Column(
+        db.Integer,
+        nullable=False
+    )
+
+    categoria = db.Column(
+        db.String(100),
+        nullable=False
+    )
+
+    status = db.Column(
+        db.String(50),
+        default="não assistido"
+    )
+
+    avaliacao = db.Column(
+        db.Float,
+        nullable=True
+    )
+
+    review = db.Column(
+        db.Text,
+        nullable=True
+    )
