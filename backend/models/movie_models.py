@@ -43,3 +43,4 @@ class Movie(db.Model):
         db.Text,
         nullable=True
     )
+

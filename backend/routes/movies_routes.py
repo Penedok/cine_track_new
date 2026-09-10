@@ -29,8 +29,21 @@ movies_routes = Blueprint("movies", __name__)
 # GET /movies → lista todos os filmes
 @movies_routes.route("/movies", methods=["GET"])
 def get_all_movies():
-    movies = get_movies()
-    return jsonify(movies)
+    movies=get_movies()
+
+    resultado = []
+
+    for movie in movies:
+        resultado.append({
+            "id": movie.id,
+            "title": movie.title,
+            "ano": movie.ano,
+            "categoria": movie.categoria,
+            "status": movie.status,
+            "avaliacao": movie.avaliacao,
+            "review": movie.review
+        })
+    return jsonify(resultado)
 
 
 # GET /movies/2 → o <int:id> vira o argumento id (número) da função
@@ -41,19 +54,28 @@ def get_by_id(id):
     # Service devolve None quando não acha o filme
     if movie is None:
         return jsonify({"erro": "Filme não encontrado"}), 404
-
+        
+    
     return jsonify(movie)
 
 
 # POST /movies → cria um filme. O JSON do body está em request.get_json()
 @movies_routes.route("/movies", methods=["POST"])
 def create_new_movie():
-    novo_filme = request.get_json()
-    movie = create_movie(novo_filme)
+    dados = request.get_json()
+    movie = create_movie(dados)
     if isinstance(movie,str):
           return {"mensagem": movie}, 400
     # 201 = Created (recurso novo)
-    return jsonify(movie), 201
+    return jsonify({
+        "id": movie.id,
+        "title": movie.title,
+        "ano": movie.ano,
+        "categoria": movie.categoria,
+        "status": movie.status,
+        "avaliacao": movie.avaliacao,
+        "review": movie.review
+    }), 201
 
 
 # DELETE /movies/2 → remove o filme da lista
@@ -73,10 +95,22 @@ def update_by_id(id):
     dados = request.get_json()
     movie = editar_filme(id, dados)
 
+    resultado = []
+
     if movie is None:
         return jsonify({"erro": "Filme não encontrado"}), 404
 
-    return jsonify(movie)
+    resultado.append({
+        "id": movie.id,
+        "title": movie.title,
+        "ano": movie.ano,
+        "categoria": movie.categoria,
+        "status": movie.status,
+        "avaliacao": movie.avaliacao,
+        "review": movie.review
+    })
+
+    return jsonify(resultado)
 
 
 @movies_routes.route("/sessoes", methods=["POST"])
@@ -89,10 +123,14 @@ def sessao_by_id():
 
     return jsonify(sessao_cinema)
 
+
+
 @movies_routes.route("/sessoes", methods=["GET"])
 def get_sessions_movies():
     pegar_filmes = comparar_movies()
     return jsonify(pegar_filmes)
+
+
 
 
 @movies_routes.route("/sessoes/<int:id>", methods=["PUT"])
