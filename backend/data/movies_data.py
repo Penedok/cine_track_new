@@ -44,32 +44,5 @@ movies =[
         "avaliacao": 4.6,
         "review": "Filme cult com reviravoltas impactantes"
     },
-   
+
 ]
-
-sessao_cinema = [
-    {
-        "id":1,
-        "descricao":"sabádo a tarde",
-        "filmes_id":[4,5]
-    },
-     {
-        "id":2,
-        "descricao":"domingo a tarde",
-        "filmes_id":[2,5]
-    }
-]
-
-
-criando_categoria = [
-    {   "id":1,
-        "categoria": "Drama"
-    },
-    {   "id":2,
-        "categoria": "Ficção Científica"
-    },
-    {   "id":3,
-        "categoria": "Fantasia"
-    },
-]
-

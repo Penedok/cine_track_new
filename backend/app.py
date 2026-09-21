@@ -9,6 +9,8 @@ from models import Movie
 
 # Importa as rotas
 from routes.movies_routes import movies_routes
+from routes.sessions_routes import sessions_routes
+from routes.categories_routes import categories_routes
 
 
 app = Flask(__name__)
@@ -55,6 +57,8 @@ def liberar_cors(response):
 # =========================
 
 app.register_blueprint(movies_routes)
+app.register_blueprint(sessions_routes)
+app.register_blueprint(categories_routes)
 
 
 # =========================
