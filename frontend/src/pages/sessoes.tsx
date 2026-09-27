@@ -50,7 +50,7 @@ export default function Sessoes() {
   const removeSession = async (id: number) => {
     const response = await deleteSession(id);
     if (response) {
-      setSessions((prev) => prev.filter((session) => session.id !== id));
+      setSessions((prev) => prev?.filter((session) => session.id !== id));
     } else {
       console.error("Erro ao remover sessão: não foi possível remover a sessão");
     }

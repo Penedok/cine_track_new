@@ -72,7 +72,7 @@ export default function ModalSessionMovie() {
   const filteredMovies = useMemo(() => {
     const query = search.trim().toLowerCase();
 
-    return movies.filter((movie) => movie.title?.toLowerCase().includes(query));
+    return movies?.filter((movie) => movie.title?.toLowerCase().includes(query));
   }, [movies, search]);
 
   const selectedIds = useMemo(
@@ -86,7 +86,7 @@ export default function ModalSessionMovie() {
   };
 
   const removeMovie = (id: number) => {
-    setSelectedMovies((current) => current.filter((movie) => movie.id !== id));
+    setSelectedMovies((current) => current?.filter((movie) => movie.id !== id));
   };
 
   if (!isSessionModalOpen) return null;

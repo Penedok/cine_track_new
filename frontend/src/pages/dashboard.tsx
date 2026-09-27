@@ -91,7 +91,7 @@ export default function Dashboard() {
     try{
       const response = await deleteMovie(id)
       if(response){
-        setMovies(prev=>prev.filter(movie=>movie.id !== id))
+        setMovies(prev=>prev?.filter(movie=>movie.id !== id))
       }else{
         console.error('Erro ao remover filme: não foi possível remover o filme')
       }
@@ -119,7 +119,7 @@ export default function Dashboard() {
   const watchedMovies = useMemo(() => {
     const query = search.trim().toLowerCase()
 
-    return movies.filter((movie) => {
+    return movies?.filter((movie) => {
       const matchesStatus = movie.status === 'assistido'
       const matchesTitle = movie?.title?.toLowerCase().includes(query)
       const matchesCategoria =
