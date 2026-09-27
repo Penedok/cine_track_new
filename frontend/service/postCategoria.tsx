@@ -1,8 +1,9 @@
 import axios from "axios";
+import { apiUrl } from "../config/api";
 
 export const postCategoria = async (categoria: string) => {
   try {
-    const response = await axios.post("http://localhost:5000/categoria", {
+    const response = await axios.post(`${apiUrl}/categoria`, {
       categoria,
     });
     return response.data;

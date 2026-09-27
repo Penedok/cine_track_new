@@ -1,9 +1,10 @@
 import axios from "axios";
+import { apiUrl } from "../config/api";
 
 export const    postSession = async(description:string,ids:number[]) => {
 
     try{
-    const response = await axios.post("http://localhost:5000/sessoes", {
+    const response = await axios.post(`${apiUrl}/sessoes`, {
       descricao: description,
       filmes_id: ids,
     })
