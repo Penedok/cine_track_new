@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { apiUrl } from '../config/api';
 
 const getMovies = async ()=>{
-    const response = await axios.get('http://localhost:5000/movies');
+    const response = await axios.get(`${apiUrl}/movies`);
 
     if(response){
         return response.data;

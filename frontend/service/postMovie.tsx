@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { apiUrl } from '../config/api'
 
 export const postMovie = async(title:string,
     ano:string,
@@ -8,7 +9,7 @@ export const postMovie = async(title:string,
     review:string,
 )=>{
     try{
-        const response = await axios.post('http://localhost:5000/movies',{
+        const response = await axios.post(`${apiUrl}/movies`,{
             title,
             ano,
             categoria,

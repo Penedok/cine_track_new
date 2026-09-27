@@ -10,15 +10,6 @@ from services.movies_service import (
     create_movie,
     delete_movie,
     editar_filme,
-    criar_sessao_service,
-    comparar_movies,
-    edit_session,
-    delete_session,
-    criar_categoria,
-    retornar_categoria,
-    pegando_categoria
-    
-    
 )
 
 # Cria o grupo de rotas. O nome 'movies' é só um identificador interno.
@@ -54,8 +45,8 @@ def get_by_id(id):
     # Service devolve None quando não acha o filme
     if movie is None:
         return jsonify({"erro": "Filme não encontrado"}), 404
-        
-    
+
+
     return jsonify(movie)
 
 
@@ -111,69 +102,3 @@ def update_by_id(id):
     })
 
     return jsonify(resultado)
-
-
-@movies_routes.route("/sessoes", methods=["POST"])
-def sessao_by_id():
-    nova_sessao = request.get_json()
-    sessao_cinema = criar_sessao_service(nova_sessao)
-
-    if isinstance(sessao_cinema,str):
-         return {"mensagem": sessao_cinema}, 400
-
-    return jsonify(sessao_cinema)
-
-
-
-@movies_routes.route("/sessoes", methods=["GET"])
-def get_sessions_movies():
-    pegar_filmes = comparar_movies()
-    return jsonify(pegar_filmes)
-
-
-
-
-@movies_routes.route("/sessoes/<int:id>", methods=["PUT"])
-def update_sessios_by_id(id):
-    dados = request.get_json()
-    sessao = edit_session(id,dados)
-
-    return jsonify(sessao)
-
-@movies_routes.route("/sessoes/<int:id>", methods=["DELETE"])
-def delete_session_by_id(id):
-    sessao = delete_session(id)
-
-    if sessao is None:
-        return jsonify({"erro": "Sessão não encontrada"}),404
-
-    return jsonify({"mensagem": "Sessão removida com sucesso"}) 
-
-
-@movies_routes.route("/categoria", methods=["POST"])
-def add_categoria():
-    dados_categoria = request.get_json()
-    categoria_criada = criar_categoria(dados_categoria)
-
-    if isinstance(categoria_criada,str):
-        return jsonify({"mensagem":categoria_criada})
-
-    return jsonify(categoria_criada)
-
-@movies_routes.route("/categoria", methods=["GET"])
-def get_all_categoria():
-    categorias = retornar_categoria()
-
-    return jsonify(categorias)
-
-
-@movies_routes.route("/categoria/filmes", methods=["GET"])
-def get_movie_by_categoria():
-    categorias = pegando_categoria()
-
-    return jsonify (categorias)
-
-
-    
-    
-  

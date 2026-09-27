@@ -1,10 +1,11 @@
 import axios from 'axios'
+import { apiUrl } from '../config/api'
 
 
 
 export const deleteMovie = async(id:string)=>{
     try{
-        const response = await axios.delete(`http://localhost:5000/movies/${id}`)
+        const response = await axios.delete(`${apiUrl}/movies/${id}`)
         return response.data
     }catch(error){
         console.error('Erro ao remover filme:', error)
