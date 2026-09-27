@@ -21,7 +21,7 @@ export default function Dashboard() {
 
   // Mapa id -> nome da categoria, pra não precisar percorrer o array toda hora
   const categoriaNomePorId = useMemo(
-    () => new Map(categorias.map((item) => [item.id, item.categoria])),
+    () => new Map(categorias?.map((item) => [item.id, item.categoria])),
     [categorias],
   )
 
@@ -177,7 +177,7 @@ export default function Dashboard() {
             aria-label="Filtrar por categoria"
           >
             <option value="">Todas as categorias</option>
-            {categorias.map((item) => (
+            {categorias?.map((item) => (
               <option key={item.id} value={item.id}>
                 {item.categoria}
               </option>
@@ -234,7 +234,7 @@ export default function Dashboard() {
                 <option value="" disabled>
                   Selecione
                 </option>
-                {categorias.map((item) => (
+                {categorias?.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.categoria}
                   </option>
@@ -307,7 +307,7 @@ export default function Dashboard() {
           <p className="empty-state">Nenhum filme assistido encontrado.</p>
         ) : (
           <div className="movie-grid">
-            {watchedMovies.map((movie) => (
+            {watchedMovies?.map((movie) => (
               <article key={movie.id} className="watched-card">
                 <div className="watched-poster" aria-hidden="true">
                   <span>{movie.title.charAt(0)}</span>

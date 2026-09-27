@@ -24,7 +24,7 @@ export default function Sessoes() {
   const [categorias, setCategorias] = useState<Category[]>([]);
 
   const categoriaNomePorId = useMemo(
-    () => new Map(categorias.map((item) => [item.id, item.categoria])),
+    () => new Map(categorias?.map((item) => [item.id, item.categoria])),
     [categorias],
   );
 
@@ -92,7 +92,7 @@ export default function Sessoes() {
           <p className="empty-state">Nenhuma sessão criada ainda.</p>
         ) : (
           <div className="session-grid">
-            {sessions.map((session) => (
+            {sessions?.map((session) => (
               <article key={session.id} className="session-card">
                 <div className="session-card-heading">
                   <h3>{session.descricao}</h3>
@@ -105,7 +105,7 @@ export default function Sessoes() {
                   </p>
                 ) : (
                   <ul className="session-movie-list">
-                    {session.filmes.map((movie) => (
+                    {session.filmes?.map((movie) => (
                       <li key={movie.id} className="session-movie-item">
                         <div className="session-modal-poster" aria-hidden="true">
                           {movie.title.charAt(0)}

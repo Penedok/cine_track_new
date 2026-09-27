@@ -34,7 +34,7 @@ export default function MovieColumn({
         <p className="column-empty">Nenhum filme nesta lista.</p>
       ) : (
         <div className="column-list">
-          {movies.map((movie) => (
+          {movies?.map((movie) => (
             <MovieCard
               key={movie.id}
               movie={movie}

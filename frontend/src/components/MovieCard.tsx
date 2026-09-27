@@ -55,7 +55,7 @@ export default function MovieCard({
             <div className="rating">
               <span className="feedback-label">Minha avaliação</span>
               <div className="stars" role="group" aria-label="Avaliação">
-                {[1, 2, 3, 4, 5].map((star) => (
+                {[1, 2, 3, 4, 5]?.map((star) => (
                   <button
                     key={star}
                     type="button"

@@ -19,7 +19,7 @@ export default function ModalSessionMovie() {
   const [erro, setErro] = useState("");
 
   const categoriaNomePorId = useMemo(
-    () => new Map(categorias.map((item) => [item.id, item.categoria])),
+    () => new Map(categorias?.map((item) => [item.id, item.categoria])),
     [categorias],
   );
 
@@ -76,7 +76,7 @@ export default function ModalSessionMovie() {
   }, [movies, search]);
 
   const selectedIds = useMemo(
-    () => new Set(selectedMovies.map((movie) => movie.id)),
+    () => new Set(selectedMovies?.map((movie) => movie.id)),
     [selectedMovies],
   );
 
@@ -138,7 +138,7 @@ export default function ModalSessionMovie() {
                   Nenhum filme encontrado para essa busca.
                 </p>
               ) : (
-                filteredMovies.map((movie) => {
+                filteredMovies?.map((movie) => {
                   const year = movie.ano ?? movie.year;
                   const alreadySelected = selectedIds.has(movie.id);
 
@@ -175,7 +175,7 @@ export default function ModalSessionMovie() {
                   Os filmes escolhidos para a sessão aparecem aqui.
                 </p>
               ) : (
-                selectedMovies.map((movie) => (
+                selectedMovies?.map((movie) => (
                   <article key={movie.id} className="session-modal-item">
                     <div className="session-modal-poster" aria-hidden="true">
                       {movie.title.charAt(0)}
@@ -202,7 +202,7 @@ export default function ModalSessionMovie() {
           className="session-modal-submit"
           type="button"
          
-          onClick={()=>handlePostSession(description,selectedMovies.map((movie) => movie.id))}
+          onClick={()=>handlePostSession(description,selectedMovies?.map((movie) => movie.id))}
         >
           Criar sessão cinema
         </button>
