@@ -22,6 +22,10 @@ database_url = os.getenv(
     "sqlite:///cine_track.db"
 )
 
+# SQLAlchemy 2 não aceita o prefixo "postgres://"
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://", 1)
+
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -62,7 +66,7 @@ app.register_blueprint(categories_routes)
 
 if __name__ == "__main__":
     app.run(
-        port=5000,
-        host="localhost",
+        port=int(os.getenv("PORT", 5000)),
+        host="0.0.0.0",
         debug=True,
     )
