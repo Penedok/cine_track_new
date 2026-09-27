@@ -44,3 +44,37 @@ class Movie(db.Model):
         nullable=True
     )
 
+
+class Sessao(db.Model):
+    __tablename__ = "sessoes"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    descricao = db.Column(
+        db.String(200),
+        nullable=False
+    )
+
+    filmes_ids = db.Column(
+        db.JSON,
+        nullable=True
+    )
+
+class Category(db.Model):
+    __tablename__ = "categorias"
+
+    id = db.Column(
+        db.Integer,
+        primary_key=True
+    )
+
+    categoria = db.Column(
+        db.String(200),
+        nullable=True
+    )
+
+
+

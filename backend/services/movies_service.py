@@ -1,6 +1,6 @@
 # A lista em memória dos filmes. Todas as funções abaixo leem ou alteram essa lista.
 from data.movies_data import movies , sessao_cinema , criando_categoria
-from models import Movie
+from models import Movie, Sessao , Category
 from extensions import db
 
 
@@ -37,7 +37,7 @@ def create_movie(dados):
     }
     
         # 1. Valida o dicionário 
-    for key,valor in dados.items():
+    for key in dados:
         if key not in chaves_permitidas:
              return "Solicitação negada! O campo solicitado é inexistente"
         
@@ -95,92 +95,133 @@ def editar_filme(id, dados):
 
 
 def criar_sessao_service(dados):
-    novo_id = len(sessao_cinema) + 1
 
-    chaves_permitidos ={"descricao","filmes_id"}
+    chaves_permitidas ={"descricao","filmes_ids"}
 
     for key in dados:
-        if key not in chaves_permitidos:
-            return "Solicitação negada! O campo solicitado é inesistente"
+        if key not in chaves_permitidas:
+            return "Solicitação negada! O campo solicitado é inexistente"
         
-    nova_sessao = {
-                    "id": novo_id,
-                    "descricao": dados["descricao"],
-                    "filmes_id": dados["filmes_id"]
-    }
+    if "descricao" not in dados or "filmes_ids" not in dados:
+        return "Solicitação negada! Os campos 'descricao' e 'filmes_ids' são obrigatórios"
+        
+    nova_sessao = Sessao( 
+                    descricao=dados["descricao"],
+                     filmes_ids=dados["filmes_ids"]
+    )
 
-    sessao_cinema.append(nova_sessao)
+    db.session.add(nova_sessao)
+    db.session.commit()
     return nova_sessao
 
 
 def comparar_movies():
-    sessoes_com_filmes = []
-    for sessao in sessao_cinema:
-      
-          filmes_encontrados = []
+    sessoes = Sessao.query.all()
+    movies = Movie.query.all()
 
-          for movie in movies:
-            if movie["id"] in sessao["filmes_id"]:
-                  filmes_encontrados.append(movie)
+    sessoes_com_filmes = []
+    for sessao in sessoes:
+        filmes_encontrados = []
+
+        for movie in movies:
+          if movie.id in sessao.filmes_ids:
+              filmes_encontrados.append({"id": movie.id,
+                              "title": movie.title,
+                              "ano": movie.ano,
+                              "categoria": movie.categoria,
+                              "status": movie.status,
+                              "avaliacao": movie.avaliacao,
+                              "review": movie.review})
                   
-          sessoes_com_filmes.append({
-              "id": sessao["id"],
-              "descricao": sessao["descricao"],
-              "filmes": filmes_encontrados
+        sessoes_com_filmes.append({
+              "id": sessao.id,
+              "descricao": sessao.descricao,
+              "filmes_ids": filmes_encontrados
             })
     return sessoes_com_filmes
 
 
 def edit_session(id,dados):
-    for sessao in sessao_cinema:
-        if sessao["id"] == id:
+    sessao = db.session.get(Sessao,id)
+    if not sessao:
+         return None
               
-              if "filmes_id" in dados:
-                  sessao["filmes_id"] = dados["filmes_id"]
+    if "filmes_ids" in dados:
+        sessao.filmes_ids = dados["filmes_ids"]
                   
-              if "descricao" in dados:
-                  sessao["descricao"] = dados["descricao"]
+    if "descricao" in dados:
+        sessao.descricao = dados["descricao"]
+    db.session.commit()
               
-              return sessao
+    return {"id":sessao.id,
+            "descricao":sessao.descricao,
+            "filmes_ids":sessao.filmes_ids
+            }
 
-    return({"mensagem": "sessao não encontrado!"}), 404
+    
 
 
 def delete_session(id):
-    for sessao in sessao_cinema:
-        if sessao["id"] == id:
-            sessao_cinema.remove(sessao)
-            return sessao
+    sessao = db.session.get(Sessao,id)
+    if sessao is None:
+            return None
+    db.session.delete(sessao)
+    db.session.commit()
+    return sessao
 
 
 def criar_categoria(dados):
-    add_id = len(criando_categoria) + 1
     chaves_permitidas = {"categoria"}
+
     for key in dados:
         if key not in chaves_permitidas:
-            return "Solicitação negada! O campo é mexistente"
+            return "Solicitação negada! O campo é inexistente"
+        
+    if "categoria" not in dados:
+        return "O campo 'categoria' é obrigatório"
             
-    nova_categoria = {"id": add_id,
-                      "categoria": dados["categoria"]
-                   }
-    criando_categoria.append(nova_categoria)
-    return nova_categoria
+    nova_categoria = Category(
+                      categoria=dados["categoria"],
+                    )
+    
+    db.session.add(nova_categoria)
+    db.session.commit()
+    return  {
+        "id": nova_categoria.id,
+        "categoria": nova_categoria.categoria
+    }
 
 
 def retornar_categoria():
-    return criando_categoria
+    categoria = Category.query.all()
+
+    if not categoria:
+        return None
+
+    return categoria
 
 
-def pegando_categoria():
+def filmes_por_categoria():
+    categorias = Category.query.all()
+    movies = Movie.query.all()
     categoria_com_filmes = []
-    for categoria in criando_categoria:
+    for categoria in categorias:
         add_filmes = []
 
         for movie in movies:
-           if movie["categoria"] == categoria["id"]:
-                add_filmes.append(movie)
-        categoria_com_filmes.append({"id":categoria["id"],
-                                     "categoria":categoria["categoria"],
+           if movie.categoria == categoria.id:
+                add_filmes.append({
+                    "id": movie.id,
+                    "title": movie.title,
+                    "ano": movie.ano,
+                    "categoria": movie.categoria,
+                    "status": movie.status,
+                    "avaliacao": movie.avaliacao,
+                    "review": movie.review
+                })
+
+        categoria_com_filmes.append({"id":categoria.id,
+                                     "categoria":categoria.categoria,
                                      "filmes":add_filmes
                                            })
    

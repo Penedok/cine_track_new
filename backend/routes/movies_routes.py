@@ -16,7 +16,7 @@ from services.movies_service import (
     delete_session,
     criar_categoria,
     retornar_categoria,
-    pegando_categoria
+    filmes_por_categoria
     
     
 )
@@ -120,17 +120,23 @@ def sessao_by_id():
 
     if isinstance(sessao_cinema,str):
          return {"mensagem": sessao_cinema}, 400
+    
+    
+    return jsonify({
+        "id": sessao_cinema.id,
+        "descricao": sessao_cinema.descricao,
+        "filmes_ids":sessao_cinema.filmes_ids
+    })
 
-    return jsonify(sessao_cinema)
+
 
 
 
 @movies_routes.route("/sessoes", methods=["GET"])
 def get_sessions_movies():
     pegar_filmes = comparar_movies()
+
     return jsonify(pegar_filmes)
-
-
 
 
 @movies_routes.route("/sessoes/<int:id>", methods=["PUT"])
@@ -138,7 +144,13 @@ def update_sessios_by_id(id):
     dados = request.get_json()
     sessao = edit_session(id,dados)
 
-    return jsonify(sessao)
+
+    if sessao is None:
+        return jsonify({"erro":"Sessão não encontrada"}),404
+
+
+    return jsonify(sessao),200
+
 
 @movies_routes.route("/sessoes/<int:id>", methods=["DELETE"])
 def delete_session_by_id(id):
@@ -163,13 +175,22 @@ def add_categoria():
 @movies_routes.route("/categoria", methods=["GET"])
 def get_all_categoria():
     categorias = retornar_categoria()
+    
+    if not categorias:
+        return jsonify({"erro": "Categoria não encontrada"}), 404
 
-    return jsonify(categorias)
+    return jsonify([
+        {
+            "id": categoria.id,
+            "categoria": categoria.categoria
+        }
+        for categoria in categorias
+    ])
 
 
 @movies_routes.route("/categoria/filmes", methods=["GET"])
 def get_movie_by_categoria():
-    categorias = pegando_categoria()
+    categorias = filmes_por_categoria()
 
     return jsonify (categorias)
 

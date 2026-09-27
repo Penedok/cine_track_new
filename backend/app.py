@@ -6,6 +6,8 @@ from extensions import db
 
 # Importa os models
 from models import Movie
+from models import Sessao
+from models import Category
 
 # Importa as rotas
 from routes.movies_routes import movies_routes

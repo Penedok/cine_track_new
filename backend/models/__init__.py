@@ -1,2 +1,2 @@
-from .movie_models import Movie
+from .movie_models import Movie, Sessao, Category
 
